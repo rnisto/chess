@@ -8,9 +8,6 @@ class Rook(Piece):
     def get_legal_moves(self, board, pos):
         row, col = pos
 
-        # use self, not board lookup
-        direction = 1 if self.colour == "b" else -1
-
         legal_moves = []
 
         for move in RookMovement(board,pos):

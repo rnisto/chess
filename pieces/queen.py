@@ -8,9 +8,6 @@ class Queen(Piece):
     def get_legal_moves(self, board, pos):
         row, col = pos
 
-        # use self, not board lookup
-        direction = 1 if self.colour == "b" else -1
-
         legal_moves = []
         potential_moves = BishopMovement(board,pos) + RookMovement(board,pos)
         for move in potential_moves:
