@@ -1,5 +1,5 @@
 from .piece import Piece
-from .utils import VerticalMovement
+from .utils import RookMovement
 
 class Pawn(Piece):
     def __init__(self, colour, type, image):
@@ -18,7 +18,7 @@ class Pawn(Piece):
 
         legal_moves = []
 
-        vertical_moves = VerticalMovement(board,pos)
+        vertical_moves = RookMovement(board,pos, vert_only= True)
         for move in vertical_moves:
             move_row, move_col = move
             if (abs(move_col - col) <= distance) and (move_col - col)*direction > 0 and board[move_col][move_row] is None:

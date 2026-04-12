@@ -1,3 +1,3 @@
-from .vertical_movement import VerticalMovement
+from .rook_movement import RookMovement
 
-__all__ = ["VerticalMovement"]
+__all__ = ["RookMovement"]
