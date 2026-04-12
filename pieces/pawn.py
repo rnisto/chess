@@ -21,7 +21,7 @@ class Pawn(Piece):
         perpendicular_moves = PerpendicularMovement(board,pos)
         for move in perpendicular_moves:
             move_row, move_col = move
-            if (abs(move_col - col) <= distance) and (move_col - col)*direction > 0:
+            if (abs(move_col - col) <= distance) and (move_col - col)*direction > 0 and board[move_col][move_row] is None:
                 legal_moves.append(move)
             else:
                 next
