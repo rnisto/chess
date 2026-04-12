@@ -5,6 +5,7 @@ import logging
 import datetime
 from math import sqrt
 
+from utils import CoordToAlphabet
 from pieces import Pawn
 
 # setup log
@@ -110,6 +111,7 @@ while running:
         elif event.type == pygame.MOUSEBUTTONDOWN:
             mouse_pos = pygame.mouse.get_pos()
             clicked = get_pos(mouse_pos)
+            print(CoordToAlphabet(clicked))
 
             if clicked is None:
                 continue
