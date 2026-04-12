@@ -1,7 +1,7 @@
 from .piece import Piece
-from .utils import RookMovement
+from .utils import BishopMovement
 
-class Rook(Piece):
+class Bishop(Piece):
     def __init__(self, colour, type, image):
         super().__init__(colour, type, image)
 
@@ -13,7 +13,7 @@ class Rook(Piece):
 
         legal_moves = []
 
-        for move in RookMovement(board,pos):
+        for move in BishopMovement(board,pos):
             move_row, move_col = move
             if board[move_col][move_row] is not None:
                 if board[move_col][move_row].colour != self.colour:

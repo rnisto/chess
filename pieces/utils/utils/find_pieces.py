@@ -4,5 +4,7 @@ def FindPieces(board,moves):
     for move in moves:
         p_row, p_col  = move
         if board[p_col][p_row] is not None:
-            locations.append(move) 
+            locations.append(move)
+        else:
+            continue
     return locations  

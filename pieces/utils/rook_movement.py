@@ -16,7 +16,7 @@ def RookMovement(board, pos, vert_only = False):
     logging.debug(f"Found {len(potential_moves)} potential moves: {potential_moves}")
     piece_locations = FindPieces(board,potential_moves)
 
-    logging.debug(f"Found pieces at these locations: {potential_moves}")
+    logging.debug(f"Found pieces at these locations: {piece_locations}")
     
     upper_bound = 7
     lower_bound = 0
