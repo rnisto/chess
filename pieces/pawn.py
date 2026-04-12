@@ -1,4 +1,5 @@
 from .piece import Piece
+from .utils import PerpendicularMovement
 
 class Pawn(Piece):
     def __init__(self, colour, type, image):
@@ -9,7 +10,6 @@ class Pawn(Piece):
 
         # use self, not board lookup
         direction = 1 if self.colour == "b" else -1
-        print(self.colour)
         
         # pawns can move up to 2 squares
         if (self.colour == "w" and col == 6) or (self.colour == "b" and col == 1):
@@ -18,13 +18,13 @@ class Pawn(Piece):
 
         legal_moves = []
 
-        # pawns can move forward but cannot move onto other peices
-        for i in range(distance):
-            new_col = col + (i + 1) * direction
-            if board[new_col][row] is None and (0 <= new_col < 8):
-                legal_moves.append((row, new_col))
-            elif board[new_col][row] is not None:
-              print("Pawn is blocked")
+        perpendicular_moves = PerpendicularMovement(board,pos)
+        for move in perpendicular_moves:
+            move_row, move_col = move
+            if (abs(move_col - col) <= distance) and (move_col - col)*direction > 0:
+                legal_moves.append(move)
+            else:
+                next
 
         # pawns can capture diagonally   
         for i in [-1,1]:

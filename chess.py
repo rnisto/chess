@@ -2,8 +2,7 @@
 import pygame
 from pygame.locals import *
 
-import pieces
-from pieces import *
+from pieces import Pawn
 
 # pygame setup
 pygame.init()
