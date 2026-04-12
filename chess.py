@@ -1,8 +1,17 @@
 # Example file showing a basic pygame "game loop"
 import pygame
 from pygame.locals import *
+import logging
+import datetime
 
 from pieces import Pawn
+
+# setup log
+start_time = datetime.datetime.now()
+logger = logging.getLogger(__name__)
+logging.basicConfig(filename=f"logs/{start_time.strftime("%Y%m%d-%H%M%S")}.log", encoding='utf-8', level=logging.DEBUG, format="%(asctime)s %(message)s")
+logging.debug("Programme started")
+
 
 # pygame setup
 pygame.init()
@@ -193,4 +202,5 @@ while running:
 
     clock.tick(60)  # limits FPS to 60
 
+logging.debug("Programme ended")
 pygame.quit()
