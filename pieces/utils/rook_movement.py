@@ -1,4 +1,5 @@
 from .utils import FindPieces
+import logging
 
 def RookMovement(board, pos, vert_only = False):
     # a function that take the current position of a piece and returns
@@ -7,17 +8,21 @@ def RookMovement(board, pos, vert_only = False):
     legal_moves = []
     potential_moves = []
 
-    # create list of moves in the same file, excluding current rank
-    for i in range(0, 7):
+    # create list of moves in the same file or same rank
+    for i in range(0, 8):
         if i != col: potential_moves.append((row,i))
         if i != row: potential_moves.append((i,col))
-            
+
+    logging.debug(f"Found {len(potential_moves)} potential moves: {potential_moves}")
     piece_locations = FindPieces(board,potential_moves)
 
+    logging.debug(f"Found pieces at these locations: {potential_moves}")
+    
     upper_bound = 7
     lower_bound = 0
     left_bound = 0
     right_bound = 7
+
     # if those pieces are in the way, define boundaries.   
     for piece in piece_locations:
         p_row, p_col = piece
@@ -29,6 +34,7 @@ def RookMovement(board, pos, vert_only = False):
             left_bound = p_row
         if p_row < row and p_row > right_bound:
             right_bound = p_row
+    logging.debug(f"Boundaries defined at u:{upper_bound}, l:{lower_bound}, left: {left_bound}, right: {right_bound}")
 
     # for moves we identified, apply boundaries
     for move in potential_moves:

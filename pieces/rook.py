@@ -1,0 +1,27 @@
+from .piece import Piece
+from .utils import RookMovement
+
+class Rook(Piece):
+    def __init__(self, colour, type, image):
+        super().__init__(colour, type, image)
+
+    def get_legal_moves(self, board, pos):
+        row, col = pos
+
+        # use self, not board lookup
+        direction = 1 if self.colour == "b" else -1
+
+        legal_moves = []
+
+        vertical_moves = RookMovement(board,pos, vert_only= False)
+        for move in vertical_moves:
+            move_row, move_col = move
+            if board[move_col][move_row] is not None:
+                if board[move_col][move_row].colour != self.colour:
+                    legal_moves.append(move)
+                else: continue
+            else: 
+                legal_moves.append(move)
+
+        print(f"Legal moves: {legal_moves}")
+        return legal_moves

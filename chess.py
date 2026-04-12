@@ -6,7 +6,7 @@ import datetime
 from math import sqrt
 
 from utils import CoordToAlphabet
-from pieces import Pawn
+from pieces import Pawn, Rook
 
 # setup log
 start_time = datetime.datetime.now()
@@ -74,6 +74,8 @@ def fen_to_piece(char):
 
     if type == "p":
         return Pawn(colour, type, image)
+    elif type == "r":
+        return Rook(colour, type, image)
     return None
 
 
@@ -111,7 +113,7 @@ while running:
         elif event.type == pygame.MOUSEBUTTONDOWN:
             mouse_pos = pygame.mouse.get_pos()
             clicked = get_pos(mouse_pos)
-            print(CoordToAlphabet(clicked))
+            logging.debug(CoordToAlphabet(clicked))
 
             if clicked is None:
                 continue
