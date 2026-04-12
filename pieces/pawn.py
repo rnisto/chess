@@ -1,5 +1,5 @@
 from .piece import Piece
-from .utils import PerpendicularMovement
+from .utils import VerticalMovement
 
 class Pawn(Piece):
     def __init__(self, colour, type, image):
@@ -18,8 +18,8 @@ class Pawn(Piece):
 
         legal_moves = []
 
-        perpendicular_moves = PerpendicularMovement(board,pos)
-        for move in perpendicular_moves:
+        vertical_moves = VerticalMovement(board,pos)
+        for move in vertical_moves:
             move_row, move_col = move
             if (abs(move_col - col) <= distance) and (move_col - col)*direction > 0 and board[move_col][move_row] is None:
                 legal_moves.append(move)

@@ -1,3 +1,3 @@
-from .perpendicular_movement import PerpendicularMovement
+from .vertical_movement import VerticalMovement
 
-__all__ = ["PerpendicualMovement"]
+__all__ = ["VerticalMovement"]
