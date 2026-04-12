@@ -3,6 +3,7 @@ import pygame
 from pygame.locals import *
 import logging
 import datetime
+from math import sqrt
 
 from pieces import Pawn
 
@@ -12,28 +13,28 @@ logger = logging.getLogger(__name__)
 logging.basicConfig(filename=f"logs/{start_time.strftime("%Y%m%d-%H%M%S")}.log", encoding='utf-8', level=logging.DEBUG, format="%(asctime)s %(message)s")
 logging.debug("Programme started")
 
-
 # pygame setup
 pygame.init()
-screen = pygame.display.set_mode((800, 800))
+framesize = (1000,1000)
+screen = pygame.display.set_mode(framesize)
 clock = pygame.time.Clock()
 running = True
 
 dark_square_col = "#769656"
 light_square_col = "#eeeed2"
-
+highlight_col = "#baca44"
+shade_col = "#eaf59a"
 my_font = pygame.font.SysFont('monospace', 100)
 
+# initial params
 selected_piece = None
 selected_pos = None
 previous_pos = None
 clicked = None
 new_pos = None
 legal_moves = None
-
 turn_colour = "w"
-
-SQUARE_SIZE = 100
+SQUARE_SIZE= int(sqrt((framesize[0] * framesize[1]) / 64))
 
 def grid_to_pixel(row, col):
     x = row * SQUARE_SIZE + SQUARE_SIZE / 2
@@ -157,10 +158,10 @@ while running:
     screen.fill("purple")
 
     # render the board
-    for y in range(0,800,100):
-        for x in range(0,800,100):
-            rect = pygame.Rect(x, y, 100, 100)
-            if x/100%2 == y/100%2:
+    for y in range(0,framesize[0],SQUARE_SIZE):
+        for x in range(0,framesize[1],SQUARE_SIZE):
+            rect = pygame.Rect(x, y, SQUARE_SIZE, SQUARE_SIZE)
+            if x/SQUARE_SIZE%2 == y/SQUARE_SIZE%2:
                 colour = dark_square_col
             else:
                 colour = light_square_col
@@ -169,25 +170,25 @@ while running:
     if previous_pos:
         row, col = previous_pos
         x, y = grid_to_pixel(row,col)
-        highlight_rect = pygame.Rect(x-50, y-50, 100, 100)
-        pygame.draw.rect(screen, "#eaf59a", highlight_rect)    
+        highlight_rect = pygame.Rect(x-(SQUARE_SIZE/2), y-(SQUARE_SIZE/2), SQUARE_SIZE, SQUARE_SIZE)
+        pygame.draw.rect(screen, shade_col, highlight_rect)    
 
     if new_pos:
         row, col = new_pos
         x, y = grid_to_pixel(row,col)
-        highlight_rect = pygame.Rect(x-50, y-50, 100, 100)
-        pygame.draw.rect(screen, "#baca44", highlight_rect)         
+        highlight_rect = pygame.Rect(x-(SQUARE_SIZE/2), y-(SQUARE_SIZE/2), SQUARE_SIZE, SQUARE_SIZE)
+        pygame.draw.rect(screen, highlight_col, highlight_rect)         
 
     if clicked:
         row, col = clicked
         x, y = grid_to_pixel(row,col)
-        highlight_rect = pygame.Rect(x-50, y-50, 100, 100)
-        pygame.draw.rect(screen, "#baca44", highlight_rect)
+        highlight_rect = pygame.Rect(x-(SQUARE_SIZE/2), y-(SQUARE_SIZE/2), SQUARE_SIZE, SQUARE_SIZE)
+        pygame.draw.rect(screen, highlight_col, highlight_rect)
 
     if legal_moves:
         for row, col in legal_moves:
             x, y = grid_to_pixel(row,col)
-            pygame.draw.circle(screen, "#baca44", (x, y), 10)    
+            pygame.draw.circle(screen, highlight_col, (x, y), SQUARE_SIZE / 10)    
 
 
     # render the pieces
