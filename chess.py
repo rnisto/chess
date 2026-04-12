@@ -1,7 +1,9 @@
 # Example file showing a basic pygame "game loop"
 import pygame
-
 from pygame.locals import *
+
+import pieces
+from pieces import *
 
 # pygame setup
 pygame.init()
@@ -24,60 +26,6 @@ legal_moves = None
 turn_colour = "w"
 
 SQUARE_SIZE = 100
-
-class Piece:
-    def __init__(self, colour, type, image):
-        self.colour = colour
-        self.type = type
-        self.image = image
-
-    def get_legal_moves(self, board, pos):
-        return []
-
-class Pawn(Piece):
-    def __init__(self, colour, type, image):
-        super().__init__(colour, type, image)
-
-class Pawn(Piece):
-    def get_legal_moves(self, board, pos):
-        row, col = pos
-
-        # use self, not board lookup
-        direction = 1 if self.colour == "b" else -1
-        print(self.colour)
-        
-        # debug rule: move 1 or 2 or many squares
-        if (self.colour == "w" and col == 6) or (self.colour == "b" and col == 1):
-            distance = 2 
-        else: distance = 1
-
-        legal_moves = []
-
-        for i in range(distance):
-            new_col = col + (i + 1) * direction
-            if board[new_col][row] is None and 0 <= new_col < 8:
-                legal_moves.append((row, new_col))
-            elif board[new_col][row] is not None:
-              return legal_moves
-            
-        for i in range(distance):
-            new_col = col + (i + 1) * direction
-            new_row = row + (i + 1)
-            if board[new_col][new_row] is None and 0 <= new_col < 8 and 0 <= new_row < 8:
-                legal_moves.append((new_row, new_col))
-            elif board[new_col][new_row] is not None:
-              return legal_moves
-            
-        for i in range(distance):
-            new_col = col + (i + 1) * direction
-            new_row = row + (i - 1)
-            if board[new_col][new_row] is None and 0 <= new_col < 8 and 0 <= new_row < 8:
-                legal_moves.append((new_row, new_col))
-            elif board[new_col][new_row] is not None:
-              return legal_moves
-
-        print(legal_moves)
-        return legal_moves
 
 def grid_to_pixel(row, col):
     x = row * SQUARE_SIZE + SQUARE_SIZE / 2
