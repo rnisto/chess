@@ -15,7 +15,7 @@ logging.debug("Programme started")
 
 # pygame setup
 pygame.init()
-framesize = (1000,1000)
+framesize = (800,800)
 screen = pygame.display.set_mode(framesize)
 clock = pygame.time.Clock()
 running = True
