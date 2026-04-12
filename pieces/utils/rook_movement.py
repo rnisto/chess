@@ -18,28 +18,28 @@ def RookMovement(board, pos, vert_only = False):
 
     logging.debug(f"Found pieces at these locations: {piece_locations}")
     
-    upper_bound = 7
-    lower_bound = 0
-    left_bound = 0
-    right_bound = 7
+    n_bound = 0
+    s_bound = 7
+    e_bound = 7
+    w_bound = 0
 
     # if those pieces are in the way, define boundaries.   
     for piece in piece_locations:
         p_row, p_col = piece
-        if p_col > col and p_col < upper_bound:
-            upper_bound = p_col
-        if p_col < col and p_col > lower_bound:
-            lower_bound = p_col
-        if p_row > row and p_row < left_bound:
-            left_bound = p_row
-        if p_row < row and p_row > right_bound:
-            right_bound = p_row
-    logging.debug(f"Boundaries defined at u:{upper_bound}, l:{lower_bound}, left: {left_bound}, right: {right_bound}")
+        if p_col < col and p_col > n_bound:
+            n_bound = p_col
+        if p_col > col and p_col < s_bound:
+            s_bound = p_col
+        if p_row > row and p_row < e_bound:
+            e_bound = p_row
+        if p_row < row and p_row > w_bound:
+            w_bound = p_row
+    logging.debug(f"Boundaries defined at n:{n_bound}, s:{s_bound}, w: {w_bound}, e: {e_bound}")
 
     # for moves we identified, apply boundaries
     for move in potential_moves:
         new_row, new_col  = move
-        if lower_bound <= new_col <= upper_bound and left_bound <= new_row <= right_bound:
+        if (n_bound <= new_col <= s_bound) and (w_bound <= new_row <= e_bound):
             legal_moves.append(move)
     
     if vert_only == True:

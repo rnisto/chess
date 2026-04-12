@@ -6,7 +6,7 @@ import datetime
 from math import sqrt
 
 from utils import CoordToAlphabet
-from pieces import Pawn, Rook, Bishop
+from pieces import Pawn, Rook, Bishop, Queen
 
 # setup log
 start_time = datetime.datetime.now()
@@ -78,6 +78,8 @@ def fen_to_piece(char):
         return Rook(colour, type, image)
     elif type == "b":
         return Bishop(colour, type, image)
+    elif type == "q":
+        return Queen(colour, type, image)
     return None
 
 
