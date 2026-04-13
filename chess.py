@@ -5,8 +5,7 @@ import logging
 import datetime
 from math import sqrt
 
-from utils import CoordToAlphabet
-from pieces import Pawn, Rook, Bishop, Queen, King, Knight
+from utils import CoordToAlphabet, GridToPixel, PixelToGrid, RenderPiece, FenToPiece, GetPos
 
 # setup log
 start_time = datetime.datetime.now()
@@ -17,10 +16,12 @@ logging.debug("Programme started")
 # pygame setup
 pygame.init()
 framesize = (800,800)
+SQUARE_SIZE = int(sqrt((framesize[0] * framesize[1]) / 64))
 screen = pygame.display.set_mode(framesize)
 clock = pygame.time.Clock()
 running = True
 
+# set style
 dark_square_col = "#769656"
 light_square_col = "#eeeed2"
 highlight_col = "#baca44"
@@ -35,65 +36,8 @@ clicked = None
 new_pos = None
 legal_moves = None
 turn_colour = "w"
-SQUARE_SIZE= int(sqrt((framesize[0] * framesize[1]) / 64))
 
-def grid_to_pixel(row, col):
-    x = row * SQUARE_SIZE + SQUARE_SIZE / 2
-    y = col * SQUARE_SIZE + SQUARE_SIZE / 2
-    return (x, y)
-
-def pixel_to_grid(pos):
-    x, y = pos
-    row = int(x // SQUARE_SIZE)
-    col = int(y // SQUARE_SIZE)
-    return (row, col)
-
-def render_piece(piece, row, col):
-    y, x = grid_to_pixel(row,col)
-    text_surface = my_font.render(piece.image, True, (0, 0, 0))
-    text_rect = text_surface.get_rect(center = (x,y))
-    screen.blit(text_surface, text_rect)
-
-piece_map = {
-    'p': ('b', 'p', 'p'),
-    'P': ('w', 'p', 'P'),
-    'r': ('b', 'r', 'r'),
-    'R': ('w', 'r', 'R'),
-    'n': ('b', 'n', 'n'),
-    'N': ('w', 'n', 'N'),
-    'b': ('b', 'b', 'b'),
-    'B': ('w', 'b', 'B'),
-    'q': ('b', 'q', 'q'),
-    'Q': ('w', 'q', 'Q'),
-    'k': ('b', 'k', 'k'),
-    'K': ('w', 'k', 'K'),
-}
-
-def fen_to_piece(char):
-    colour, type, image = piece_map[char]
-
-    if type == "p":
-        return Pawn(colour, type, image)
-    elif type == "r":
-        return Rook(colour, type, image)
-    elif type == "b":
-        return Bishop(colour, type, image)
-    elif type == "q":
-        return Queen(colour, type, image)
-    elif type == "k":
-        return King(colour, type, image)
-    elif type == "n":
-        return Knight(colour, type, image)
-    return None
-
-
-def get_pos(mouse_pos):
-    row, col = pixel_to_grid(mouse_pos)
-    print(row, col)
-    if 0 <= row < 8 and 0 <= col < 8:
-        return (row,col)
-    return None
-
+# setting up board
 starting_position_fen = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR"
 starting_position_fen = starting_position_fen.replace("/","")
 
@@ -102,7 +46,7 @@ for char in starting_position_fen:
     if char.isnumeric():
         starting_position.extend([None] * int(char))
     else:
-        starting_position.append(fen_to_piece(char))
+        starting_position.append(FenToPiece(char))
 print(starting_position)
 
 board = [['  ' for i in range(8)] for i in range(8)]
@@ -111,6 +55,7 @@ for col in range(8):
     for row in range(8):
         board[col][row] = starting_position[col*8 + row]
 
+# starting game
 while running:
     # poll for events
     # pygame.QUIT event means the user clicked X to close your window
@@ -120,7 +65,7 @@ while running:
         
         elif event.type == pygame.MOUSEBUTTONDOWN:
             mouse_pos = pygame.mouse.get_pos()
-            clicked = get_pos(mouse_pos)
+            clicked = GetPos(mouse_pos,SQUARE_SIZE)
             logging.debug(CoordToAlphabet(clicked))
 
             if clicked is None:
@@ -179,27 +124,28 @@ while running:
                 colour = light_square_col
             pygame.draw.rect(screen, colour, rect)
 
+    # render highlights
     if previous_pos:
         row, col = previous_pos
-        x, y = grid_to_pixel(row,col)
+        x, y = GridToPixel(row,col,SQUARE_SIZE)
         highlight_rect = pygame.Rect(x-(SQUARE_SIZE/2), y-(SQUARE_SIZE/2), SQUARE_SIZE, SQUARE_SIZE)
         pygame.draw.rect(screen, shade_col, highlight_rect)    
 
     if new_pos:
         row, col = new_pos
-        x, y = grid_to_pixel(row,col)
+        x, y = GridToPixel(row,col,SQUARE_SIZE)
         highlight_rect = pygame.Rect(x-(SQUARE_SIZE/2), y-(SQUARE_SIZE/2), SQUARE_SIZE, SQUARE_SIZE)
         pygame.draw.rect(screen, highlight_col, highlight_rect)         
 
     if clicked:
         row, col = clicked
-        x, y = grid_to_pixel(row,col)
+        x, y = GridToPixel(row,col,SQUARE_SIZE)
         highlight_rect = pygame.Rect(x-(SQUARE_SIZE/2), y-(SQUARE_SIZE/2), SQUARE_SIZE, SQUARE_SIZE)
         pygame.draw.rect(screen, highlight_col, highlight_rect)
 
     if legal_moves:
         for row, col in legal_moves:
-            x, y = grid_to_pixel(row,col)
+            x, y = GridToPixel(row,col,SQUARE_SIZE)
             pygame.draw.circle(screen, highlight_col, (x, y), SQUARE_SIZE / 10)    
 
 
@@ -207,12 +153,10 @@ while running:
     for rank in range(8):
      for file in range(8):
         piece = board[rank][file]
-
         if piece is not None:
-            render_piece(piece, rank, file)
+            RenderPiece(piece, rank, file, SQUARE_SIZE, my_font, screen)
 
     pygame.display.flip()
-
     clock.tick(60)  # limits FPS to 60
 
 logging.debug("Programme ended")
