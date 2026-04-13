@@ -2,7 +2,7 @@ from .utils import FindPieces
 import logging
 from math import sqrt
 
-def BishopMovement(board, pos, vert_only = False):
+def BishopMovement(board, pos):
     # a function that take the current position of a piece and returns
     # squares it could move to diagonally.
     row, col = pos
