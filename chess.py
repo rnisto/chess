@@ -5,7 +5,7 @@ import logging
 import datetime
 from math import sqrt
 
-from utils import CoordToAlphabet, GridToPixel, PixelToGrid, RenderPiece, FenToPiece, GetPos
+from utils import CoordToAlphabet, GridToPixel, PixelToGrid, RenderPiece, FenToPiece, GetPos, RenderSquare
 
 # setup log
 start_time = datetime.datetime.now()
@@ -126,28 +126,18 @@ while running:
 
     # render highlights
     if previous_pos:
-        row, col = previous_pos
-        x, y = GridToPixel(row,col,SQUARE_SIZE)
-        highlight_rect = pygame.Rect(x-(SQUARE_SIZE/2), y-(SQUARE_SIZE/2), SQUARE_SIZE, SQUARE_SIZE)
-        pygame.draw.rect(screen, shade_col, highlight_rect)    
+        RenderSquare(previous_pos, SQUARE_SIZE, shade_col, screen)  
 
     if new_pos:
-        row, col = new_pos
-        x, y = GridToPixel(row,col,SQUARE_SIZE)
-        highlight_rect = pygame.Rect(x-(SQUARE_SIZE/2), y-(SQUARE_SIZE/2), SQUARE_SIZE, SQUARE_SIZE)
-        pygame.draw.rect(screen, highlight_col, highlight_rect)         
+        RenderSquare(new_pos, SQUARE_SIZE, highlight_col, screen)   
 
     if clicked:
-        row, col = clicked
-        x, y = GridToPixel(row,col,SQUARE_SIZE)
-        highlight_rect = pygame.Rect(x-(SQUARE_SIZE/2), y-(SQUARE_SIZE/2), SQUARE_SIZE, SQUARE_SIZE)
-        pygame.draw.rect(screen, highlight_col, highlight_rect)
+        RenderSquare(clicked, SQUARE_SIZE, highlight_col, screen)
 
     if legal_moves:
         for row, col in legal_moves:
             x, y = GridToPixel(row,col,SQUARE_SIZE)
             pygame.draw.circle(screen, highlight_col, (x, y), SQUARE_SIZE / 10)    
-
 
     # render the pieces
     for rank in range(8):
