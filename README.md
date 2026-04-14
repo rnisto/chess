@@ -11,3 +11,4 @@ Chess game in python using pygame
 - [ ] reworking how the board is stored (single list of length 64?)
 - [ ] improving logging / removing console prints
 - [ ] updating pawn movement to use BishopMovement fn
+- [ ] add piece images

@@ -5,7 +5,9 @@ import logging
 import datetime
 from math import sqrt
 
-from utils import CoordToAlphabet, GridToPixel, PixelToGrid, RenderPiece, FenToPiece, RenderSquare
+import utils.fen
+import utils.coordinates
+import utils.render
 
 # Setup the log file. 
 start_time = datetime.datetime.now()
@@ -50,7 +52,7 @@ for char in starting_position_fen:
     if char.isnumeric():
         starting_position.extend([None] * int(char))
     else:
-        starting_position.append(FenToPiece(char))
+        starting_position.append(utils.fen.FenToPiece(char))
 print(starting_position)
 
 board = [['  ' for i in range(8)] for i in range(8)]
@@ -69,8 +71,8 @@ while running:
         # Checking whether the user clicked on a square and moving pieces.
         elif event.type == pygame.MOUSEBUTTONDOWN:
             mouse_pos = pygame.mouse.get_pos()
-            clicked = PixelToGrid(mouse_pos,SQUARE_SIZE)
-            logging.debug(CoordToAlphabet(clicked))
+            clicked = utils.coordinates.PixelToGrid(mouse_pos,SQUARE_SIZE)
+            logging.debug(utils.coordinates.CoordToAlphabet(clicked))
 
             if clicked is None:
                 continue
@@ -134,14 +136,14 @@ while running:
 
     # Render square highlights.
     if previous_pos:
-        RenderSquare(previous_pos, SQUARE_SIZE, shade_col, screen)  
+        utils.render.RenderSquare(previous_pos, SQUARE_SIZE, shade_col, screen)  
     if new_pos:
-        RenderSquare(new_pos, SQUARE_SIZE, highlight_col, screen)   
+        utils.render.RenderSquare(new_pos, SQUARE_SIZE, highlight_col, screen)   
     if clicked:
-        RenderSquare(clicked, SQUARE_SIZE, highlight_col, screen)
+        utils.render.RenderSquare(clicked, SQUARE_SIZE, highlight_col, screen)
     if legal_moves:
         for row, col in legal_moves:
-            x, y = GridToPixel(row,col,SQUARE_SIZE)
+            x, y = utils.coordinates.GridToPixel(row,col,SQUARE_SIZE)
             pygame.draw.circle(screen, highlight_col, (x, y), SQUARE_SIZE / 10)    
 
     # Render the pieces.
@@ -149,7 +151,7 @@ while running:
      for file in range(8):
         piece = board[rank][file]
         if piece is not None:
-            RenderPiece(piece, rank, file, SQUARE_SIZE, my_font, screen)
+            utils.render.RenderPiece(piece, rank, file, SQUARE_SIZE, my_font, screen)
 
     pygame.display.flip()
     clock.tick(60)  # limits FPS to 60
