@@ -3,13 +3,13 @@ import logging
 from math import sqrt
 
 def BishopMovement(board, pos):
-    # a function that take the current position of a piece and returns
+    # A function that take the current position of a piece and returns
     # squares it could move to diagonally.
     row, col = pos
     legal_moves = []
     potential_moves = []
 
-    # create list of moves on the diagonals
+    # Create list of moves on the diagonals
     for i in range(-7,8):
        for j in [1,-1]:
             new_pos = (row + i, col + i*j)
@@ -17,17 +17,21 @@ def BishopMovement(board, pos):
                 potential_moves.append(new_pos)
     potential_moves = [x for x in potential_moves if x != pos]
 
-    logging.debug(f"Found {len(potential_moves)} potential moves: {potential_moves}")
-    piece_locations = FindPieces(board,potential_moves)
+    logging.debug(
+        f"Found {len(potential_moves)} potential moves: {potential_moves}"
+        )
 
+    # Finding pieces located on the potential movement squares.
+    piece_locations = FindPieces(board,potential_moves)
     logging.debug(f"Found pieces at these locations: {piece_locations}")
     
+    # Define initial boundaries.
     nw_bound = 7
     ne_bound = 7
     sw_bound = 7
     se_bound = 7
 
-    # if those pieces are in the way, define boundaries.   
+    # If those pieces are in the way, narrow boundaries.   
     for piece in piece_locations:
         p_row, p_col = piece
         dist = int(sqrt((p_row - row)**2 + (p_col - col)**2))
@@ -47,7 +51,7 @@ def BishopMovement(board, pos):
     
     logging.debug(f"Boundaries defined at u:{nw_bound}, l:{ne_bound}, left: {sw_bound}, right: {se_bound}")
 
-    # for moves we identified, apply boundaries
+    # For moves identified, apply boundaries.
     for move in potential_moves:
         new_row, new_col  = move
         dist = int(sqrt((new_row - row)**2 + (new_col - col)**2))

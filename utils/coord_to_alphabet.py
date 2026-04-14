@@ -1,6 +1,6 @@
 def CoordToAlphabet(coord:tuple):
+    """This function converts row, col coords into algebraic chess notation"""
     row, col = coord
-    
     start = ord("a") - 1
 
     col_new = abs(col - 8)

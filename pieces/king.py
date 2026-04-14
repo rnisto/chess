@@ -3,10 +3,12 @@ from .utils import BishopMovement, RookMovement
 from math import sqrt
 
 class King(Piece):
+    """A Piece that can move one square in any direction, or 'castle'"""
     def __init__(self, colour, type, image):
         super().__init__(colour, type, image)
 
     def get_legal_moves(self, board, pos):
+        """Returns the legal moves of the Piece in the given position"""
         row, col = pos
 
         legal_moves = []

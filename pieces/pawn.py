@@ -2,10 +2,13 @@ from .piece import Piece
 from .utils import RookMovement
 
 class Pawn(Piece):
+    """A Piece that can generally only move forward a single square per
+    per turn. It can take pieces diagonally one space ahead of it"""
     def __init__(self, colour, type, image):
         super().__init__(colour, type, image)
 
     def get_legal_moves(self, board, pos):
+        """Returns the legal moves of the Piece in the given position"""
         row, col = pos
 
         # use self, not board lookup

@@ -3,6 +3,7 @@ import pygame
 from pygame.locals import *
 
 def RenderSquare(pos, square_size, colour, screen):
+    """Renders a square in the given pixel position on the screen"""
     row, col = pos
     x, y = GridToPixel(row,col,square_size)
     rect = pygame.Rect(x-(square_size/2), y-(square_size/2), square_size, square_size)

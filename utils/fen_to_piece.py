@@ -16,6 +16,8 @@ piece_map = {
 }
 
 def FenToPiece(char):
+    """This function takes a fen character and returns the relevant
+    class."""
     colour, type, image = piece_map[char]
 
     if type == "p":

@@ -1,5 +1,5 @@
 def FindPieces(board,moves):
-# find pieces on potential movement squares
+    """ Finds pieces on squares given in move list"""
     locations = []
     for move in moves:
         p_row, p_col  = move

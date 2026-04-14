@@ -3,7 +3,7 @@ import logging
 from math import sqrt
 
 def KnightMovement(board, pos):
-    # a function that take the current position of a piece and returns
+    # A function that take the current position of a piece and returns
     # squares a knight's move away.
     row, col = pos
     legal_moves = []
@@ -16,6 +16,8 @@ def KnightMovement(board, pos):
                 legal_moves.append(move)
             else: continue
 
-    logging.debug(f"Found {len(legal_moves)} potential moves: {legal_moves}")
+    logging.debug(
+        f"Found {len(legal_moves)} potential moves: {legal_moves}"
+        )
     
     return legal_moves

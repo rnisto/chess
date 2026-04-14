@@ -2,10 +2,12 @@ from .piece import Piece
 from .utils import BishopMovement
 
 class Bishop(Piece):
+    """A Piece which can move diagonally in any direction"""
     def __init__(self, colour, type, image):
         super().__init__(colour, type, image)
 
     def get_legal_moves(self, board, pos):
+        """Returns the legal moves of the Piece in the given position"""
         row, col = pos
 
         legal_moves = []
