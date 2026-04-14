@@ -166,7 +166,7 @@ class Knight(Piece):
         row, col = pos
 
         legal_moves = []
-        potential_moves = KnightMovement(board,pos)
+        potential_moves = pieces.movement.KnightMovement(board,pos)
         for move in potential_moves:
             move_row, move_col = move
             if board[move_col][move_row] is not None:
