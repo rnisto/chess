@@ -13,7 +13,7 @@ def RenderPiece(piece, row, col, square_size, font, screen):
 
 def RenderSquare(pos, square_size, colour, screen):
     """Renders a square in the given pixel position on the screen"""
-    row, col = pos
+    row, col = pos.coords
     x, y = utils.coordinates.GridToPixel(row,col,square_size)
     rect = pygame.Rect(x-(square_size/2), y-(square_size/2), 
                        square_size, square_size)

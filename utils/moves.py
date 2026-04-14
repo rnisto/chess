@@ -23,6 +23,20 @@ class Squares:
             pieces.append(board[col][row])
         return pieces  
 
+class Square:
+    """A container for a square"""
+    def __init__(self, coords):
+        self.coords = coords
+
+    def algebraic(self):
+        """A function that returns the algebraic coordinates of the square"""
+        return utils.coordinates.CoordToAlphabet(self.coords)
+    
+    def find_piece(self,board):
+        """A function that returns the items / Pieces on the squares"""
+        row, col = self.coords
+        return board[col][row]
+
 class Move:
     """A container for storing information about a move"""
     def __init__(self, start, end, p_moved, p_taken):

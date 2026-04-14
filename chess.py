@@ -36,8 +36,7 @@ shade_col = "#eaf59a"
 my_font = pygame.font.SysFont('monospace', 100)
 
 # Definie initial params.
-selected_piece = None
-selected_pos = None
+start_square = None
 previous_pos = None
 clicked = None
 new_pos = None
@@ -73,58 +72,56 @@ while running:
         # Checking whether the user clicked on a square and moving pieces.
         elif event.type == pygame.MOUSEBUTTONDOWN:
             mouse_pos = pygame.mouse.get_pos()
-            clicked = utils.coordinates.PixelToGrid(mouse_pos,SQUARE_SIZE)
-            logging.debug(utils.coordinates.CoordToAlphabet(clicked))
+            clicked = utils.moves.Square(
+                coords = utils.coordinates.PixelToGrid(mouse_pos,SQUARE_SIZE)
+            )
+            logging.debug(clicked.algebraic())
 
             if clicked is None:
                 continue
 
-            row, col = clicked
-            piece = board[col][row]
-
             # If user clicked on a square, check if it has a piece and 
             # if so select it. This only runs if selected pieces is none
             # (i.e) the user still hasn't clicked on a piece.
-            if selected_piece is None:
-                if piece is None:
+            if start_square is None:
+                logging.debug("user selecting a piece")
+                if clicked.find_piece(board) is None:
                     continue  # click empty square → ignore
-                elif piece.colour == turn_colour:
-                    selected_piece = piece
-                    selected_pos = (row, col)
-                    legal_moves = piece.get_legal_moves(board,selected_pos)
+                elif clicked.find_piece(board).colour == turn_colour:
+                    start_square = clicked
+                    legal_moves = start_square.find_piece(board).get_legal_moves(board,start_square.coords)
                 continue
 
             # If the user has selected a piece, then this click is to 
             # make a move. This checks whether the move is legal before
             # making it on the board.
-            else:                
-                start_row, start_col = selected_pos
-                
+            else:
+                logging.debug("user selecting a move")                 
                 # Ignore clicking same square.
-                if (row, col) == (start_row, start_col):
-                    selected_piece = None
-                    selected_pos = None
+                if clicked == start_square:
+                    logging.debug("user selected start square. resetting move")
+                    start_square = None
                     continue
 
-                if clicked in legal_moves:
+                if clicked.coords in legal_moves:
+                    logging.debug("Selected a legal move")
                     selected_move = utils.moves.Move(
-                        start = (start_row, start_col) ,
-                        end = (row,col),
-                        p_moved = board[start_col][start_row],
-                        p_taken = board[selected_pos[1]][selected_pos[0]]
+                        start = start_square.coords ,
+                        end = clicked.coords,
+                        p_moved = start_square.find_piece(board),
+                        p_taken = clicked.find_piece(board)
                         )
                     utils.moves.make_move(selected_move, board, move_list)
 
-                    previous_pos = selected_pos
-                    new_pos = (row,col)
-                    selected_piece = None
-                    selected_pos = None
+                    previous_pos = start_square
+                    new_pos = clicked
+                    start_square = None
                     legal_moves = None
                     
                     turn_colour = "b" if turn_colour == "w" else "w"
                 else:
-                    selected_pos = None
-                    selected_piece = None
+                    logging.debug("user selected an illegal move, starting over.")
+                    start_square = None
                     legal_moves = None
     
 
