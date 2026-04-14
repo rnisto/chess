@@ -8,6 +8,7 @@ from math import sqrt
 import utils.fen
 import utils.coordinates
 import utils.render
+import utils.moves
 
 # Setup the log file. 
 start_time = datetime.datetime.now()
@@ -42,6 +43,7 @@ clicked = None
 new_pos = None
 legal_moves = None
 turn_colour = "w"
+move_list = utils.moves.MoveList()
 
 # Setting up the board.
 starting_position_fen = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR"
@@ -105,8 +107,13 @@ while running:
                     continue
 
                 if clicked in legal_moves:
-                    board[col][row] = selected_piece
-                    board[start_col][start_row] = None
+                    selected_move = utils.moves.Move(
+                        start = (start_row, start_col) ,
+                        end = (row,col),
+                        p_moved = board[start_col][start_row],
+                        p_taken = board[selected_pos[1]][selected_pos[0]]
+                        )
+                    utils.moves.make_move(selected_move, board, move_list)
 
                     previous_pos = selected_pos
                     new_pos = (row,col)
@@ -151,7 +158,8 @@ while running:
      for file in range(8):
         piece = board[rank][file]
         if piece is not None:
-            utils.render.RenderPiece(piece, rank, file, SQUARE_SIZE, my_font, screen)
+            utils.render.RenderPiece(piece, rank, file, SQUARE_SIZE, my_font,
+                                    screen)
 
     pygame.display.flip()
     clock.tick(60)  # limits FPS to 60

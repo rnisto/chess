@@ -1,5 +1,8 @@
+"""A set of functions to parse fen strings"""
+
 import pieces.classes
 
+# A map of fen characters to Pieces.
 piece_map = {
     'p': ('b', 'p', 'p'),
     'P': ('w', 'p', 'P'),
