@@ -3,7 +3,6 @@ from .grid_to_pixel import GridToPixel
 from .pixel_to_grid import PixelToGrid
 from .render_piece import RenderPiece
 from .fen_to_piece import FenToPiece
-from .get_pos import GetPos
 from .render_square import RenderSquare
 
 __all__ = [
