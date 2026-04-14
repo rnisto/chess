@@ -1,4 +1,4 @@
-import pieces
+import pieces.classes
 
 piece_map = {
     'p': ('b', 'p', 'p'),
@@ -21,15 +21,15 @@ def FenToPiece(char):
     colour, type, image = piece_map[char]
 
     if type == "p":
-        return pieces.Pawn(colour, type, image)
+        return pieces.classes.Pawn(colour, type, image)
     elif type == "r":
-        return pieces.Rook(colour, type, image)
+        return pieces.classes.Rook(colour, type, image)
     elif type == "b":
-        return pieces.Bishop(colour, type, image)
+        return pieces.classes.Bishop(colour, type, image)
     elif type == "q":
-        return pieces.Queen(colour, type, image)
+        return pieces.classes.Queen(colour, type, image)
     elif type == "k":
-        return pieces.King(colour, type, image)
+        return pieces.classes.King(colour, type, image)
     elif type == "n":
-        return piences.Knight(colour, type, image)
+        return pieces.classes.Knight(colour, type, image)
     return None

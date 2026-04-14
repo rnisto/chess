@@ -1,6 +1,6 @@
 """Defines the classes for each of the Chess pieces"""
 
-import movement
+import pieces.movement
 from math import sqrt
 
 class Piece:
@@ -34,7 +34,7 @@ class Pawn(Piece):
 
         legal_moves = []
 
-        vertical_moves = movement.RookMovement(board,pos, vert_only= True)
+        vertical_moves = pieces.movement.RookMovement(board,pos, vert_only= True)
         for move in vertical_moves:
             move_row, move_col = move
             if (abs(move_col - col) <= distance) and (move_col - col)*direction > 0 and board[move_col][move_row] is None:
@@ -71,7 +71,7 @@ class Rook(Piece):
 
         legal_moves = []
 
-        for move in movement.RookMovement(board,pos):
+        for move in pieces.movement.RookMovement(board,pos):
             move_row, move_col = move
             if board[move_col][move_row] is not None:
                 if board[move_col][move_row].colour != self.colour:
@@ -94,7 +94,7 @@ class Bishop(Piece):
 
         legal_moves = []
 
-        for move in movement.BishopMovement(board,pos):
+        for move in pieces.movement.BishopMovement(board,pos):
             move_row, move_col = move
             if board[move_col][move_row] is not None:
                 if board[move_col][move_row].colour != self.colour:
@@ -116,8 +116,8 @@ class Queen(Piece):
         row, col = pos
 
         legal_moves = []
-        potential_moves = (movement.BishopMovement(board,pos) 
-                        + movement.RookMovement(board,pos)
+        potential_moves = (pieces.movement.BishopMovement(board,pos) 
+                        + pieces.movement.RookMovement(board,pos)
                         )
         for move in potential_moves:
             move_row, move_col = move
@@ -141,8 +141,8 @@ class King(Piece):
         row, col = pos
 
         legal_moves = []
-        potential_moves = (movement.BishopMovement(board,pos) 
-                        + movement.RookMovement(board,pos)
+        potential_moves = (pieces.movement.BishopMovement(board,pos) 
+                        + pieces.movement.RookMovement(board,pos)
                         )
         for move in potential_moves:
             move_row, move_col = move
@@ -155,7 +155,26 @@ class King(Piece):
             else: 
                 legal_moves.append(move)
 
-        
+        print(f"Legal moves: {legal_moves}")
+        return legal_moves
+
+class Knight(Piece):
+    def __init__(self, colour, type, image):
+        super().__init__(colour, type, image)
+
+    def get_legal_moves(self, board, pos):
+        row, col = pos
+
+        legal_moves = []
+        potential_moves = KnightMovement(board,pos)
+        for move in potential_moves:
+            move_row, move_col = move
+            if board[move_col][move_row] is not None:
+                if board[move_col][move_row].colour != self.colour:
+                    legal_moves.append(move)
+                else: continue
+            else: 
+                legal_moves.append(move)
 
         print(f"Legal moves: {legal_moves}")
         return legal_moves
