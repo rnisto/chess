@@ -22,7 +22,7 @@ class GameState:
 
         self.turn_colour = "b" if self.turn_colour == "w" else "w"
 
-    def reset_selection():
+    def reset_selection(self):
         self.start_square = None
         self.legal_moves = None
 

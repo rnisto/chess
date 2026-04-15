@@ -31,11 +31,6 @@ running = True
 
 # Define style. 
 style = utils.state.Style()
-# dark_square_col = "#769656"
-# light_square_col = "#eeeed2"
-# highlight_col = "#baca44"
-# shade_col = "#eaf59a"
-# my_font = pygame.font.SysFont('monospace', 100)
 
 # Definie initial params.
 move_list = utils.moves.MoveList()
@@ -84,9 +79,14 @@ while running:
                 logging.debug("user selecting a piece")
                 if state.clicked.find_piece(board) is None:
                     continue  # click empty square → ignore
-                elif state.clicked.find_piece(board).colour == state.turn_colour:
+                elif (state.clicked.find_piece(board).colour 
+                      == state.turn_colour):
                     state.start_square = state.clicked
-                    state.legal_moves = state.start_square.find_piece(board).get_legal_moves(board,state.start_square.coords)
+                    state.legal_moves = (
+                        state.start_square
+                        .find_piece(board)
+                        .get_legal_moves(board,state.start_square.coords)
+                        )
                 continue
 
             # If the user has selected a piece, then this click is to 
@@ -109,7 +109,9 @@ while running:
                         p_taken = state.clicked.find_piece(board)
                         )
                     state.selected_move.play(board, state.move_list)
-                    state.new_turn(previous_pos=state.start_square, new_pos= state.clicked)
+                    state.new_turn(previous_pos=state.start_square,
+                                   new_pos= state.clicked
+                                   )
                 else:
                     logging.debug("user selected an illegal move, starting over.")
                     state.reset_selection()
@@ -119,34 +121,35 @@ while running:
     screen.fill("purple")
 
     # Render the board.
-    for y in range(0,framesize[0],SQUARE_SIZE):
-        for x in range(0,framesize[1],SQUARE_SIZE):
-            rect = pygame.Rect(x, y, SQUARE_SIZE, SQUARE_SIZE)
-            if x/SQUARE_SIZE%2 == y/SQUARE_SIZE%2:
-                colour = style.dark_col
-            else:
-                colour = style.light_col
-            pygame.draw.rect(screen, colour, rect)
+    utils.render.RenderBoard(screen,framesize,SQUARE_SIZE,style)
 
     # Render square highlights.
     if state.previous_pos:
-        utils.render.RenderSquare(state.previous_pos, SQUARE_SIZE, style.shade_col, screen)  
+        utils.render.RenderSquare(state.previous_pos, SQUARE_SIZE,
+                                  style.shade_col, screen
+                                  )
     if state.new_pos:
-        utils.render.RenderSquare(state.new_pos, SQUARE_SIZE, style.highlight_col, screen)   
+        utils.render.RenderSquare(state.new_pos, SQUARE_SIZE,
+                                  style.highlight_col, screen
+                                  )
     if state.clicked:
-        utils.render.RenderSquare(state.clicked, SQUARE_SIZE, style.highlight_col, screen)
+        utils.render.RenderSquare(state.clicked, SQUARE_SIZE,
+                                  style.highlight_col, screen
+                                  )
     if state.legal_moves:
         for row, col in state.legal_moves:
             x, y = utils.coordinates.GridToPixel(row,col,SQUARE_SIZE)
-            pygame.draw.circle(screen, style.highlight_col, (x, y), SQUARE_SIZE / 10)    
+            pygame.draw.circle(screen, style.highlight_col, (x, y),
+                               SQUARE_SIZE / 10)    
 
     # Render the pieces.
     for rank in range(8):
      for file in range(8):
         piece = board[rank][file]
         if piece is not None:
-            utils.render.RenderPiece(piece, rank, file, SQUARE_SIZE, style.font,
-                                    screen)
+            utils.render.RenderPiece(piece, rank, file, SQUARE_SIZE,
+                                     style.font,screen
+                                     )
 
     pygame.display.flip()
     clock.tick(60)  # limits FPS to 60

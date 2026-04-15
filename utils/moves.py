@@ -58,7 +58,7 @@ class Move:
             piece = ""
         else: piece = self.p_moved.type.upper()
     
-        return f"{piece}{self.end.algebraic()[i]}"
+        return f"{piece}{self.end.algebraic()}"
     
     def play(self, board, move_list:MoveList):
         """docstring"""

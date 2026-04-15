@@ -18,3 +18,13 @@ def RenderSquare(pos, square_size, colour, screen):
     rect = pygame.Rect(x-(square_size/2), y-(square_size/2), 
                        square_size, square_size)
     pygame.draw.rect(screen, colour, rect)
+
+def RenderBoard(screen,framesize,square_size,style):
+    for y in range(0,framesize[0],square_size):
+        for x in range(0,framesize[1],square_size):
+            rect = pygame.Rect(x, y, square_size, square_size)
+            if x/square_size%2 == y/square_size%2:
+                colour = style.dark_col
+            else:
+                colour = style.light_col
+            pygame.draw.rect(screen, colour, rect) 
