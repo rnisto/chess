@@ -130,17 +130,16 @@ while running:
                                   )
     if state.new_pos:
         utils.render.RenderSquare(state.new_pos, SQUARE_SIZE,
-                                  style.highlight_col, screen
+                                  style.shade_col, screen
                                   )
     if state.clicked:
         utils.render.RenderSquare(state.clicked, SQUARE_SIZE,
                                   style.highlight_col, screen
                                   )
     if state.legal_moves:
-        for row, col in state.legal_moves:
-            x, y = utils.coordinates.GridToPixel(row,col,SQUARE_SIZE)
-            pygame.draw.circle(screen, style.highlight_col, (x, y),
-                               SQUARE_SIZE / 10)    
+        utils.render.RenderLegalMoves(state.legal_moves, board, screen,
+                                      SQUARE_SIZE, style, state
+                                      )
 
     # Render the pieces.
     for rank in range(8):

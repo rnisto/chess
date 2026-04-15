@@ -19,6 +19,7 @@ class GameState:
 
         self.start_square = None
         self.legal_moves = None
+        self.clicked = None
 
         self.turn_colour = "b" if self.turn_colour == "w" else "w"
 
