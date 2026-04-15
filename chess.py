@@ -106,13 +106,13 @@ while running:
                 if clicked.coords in legal_moves:
                     logging.debug("Selected a legal move")
                     selected_move = utils.moves.Move(
-                        start = start_square.coords ,
-                        end = clicked.coords,
+                        start = start_square,
+                        end = clicked,
                         p_moved = start_square.find_piece(board),
                         p_taken = clicked.find_piece(board)
                         )
-                    utils.moves.make_move(selected_move, board, move_list)
-
+                    selected_move.play(board, move_list)
+                    
                     previous_pos = start_square
                     new_pos = clicked
                     start_square = None
@@ -161,5 +161,6 @@ while running:
     pygame.display.flip()
     clock.tick(60)  # limits FPS to 60
 
+logging.debug(move_list.pgn())
 logging.debug("Programme ended")
 pygame.quit()

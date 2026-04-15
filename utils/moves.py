@@ -1,21 +1,23 @@
 """docstring"""
 
+from __future__ import annotations
+
 import utils.coordinates
 import logging
 
-class Squares:
+class SquareList:
     """A container for lists of squares"""
     def __init__(self, squares):
         self.squares = squares
 
-    def algebraic(self):
+    def algebraic_all(self):
         """A function that returns the algebraic coordinates of the squares"""
         algebraic_list = []
         for i in self.squares:
             algebraic_list.append(utils.coordinates.CoordToAlphabet(i))
         return algebraic_list
     
-    def find_piece(self,board):
+    def find_piece_all(self,board):
         """A function that returns the items / Pieces on the squares"""
         pieces = []
         for square in self.squares:
@@ -45,22 +47,24 @@ class Move:
         self.p_moved = p_moved
         self.p_taken = p_taken
     
-    def pgn(self):
-        """A function that returns the pgn notation of the moves"""
-        # pieces = self.start.find_piece(board)
-        pieces_pgn = []
-        for piece in p_moved:
-            if piece is None:
-                pieces_pgn.append("")
-            elif piece.type == "p":
-                pieces_pgn.append("")
-            else: pieces_pgn.append((piece.type).upper())
-        
-        output = []
-        for i in range(len(pieces_pgn)):
-            output.append(f"{pieces_pgn[i]}{self.end.algebraic()[i]}")
-        
-        return output
+    def algebraic(self):
+        """A function that returns the pgn notation of the moves
+        This function is incomplete. It doesn't cover captures, or that other
+        edge cases such as when to include the rank / file of a piece. 
+        """
+        if self.p_moved is None:
+            piece = ""
+        elif self.p_moved.type == "p":
+            piece = ""
+        else: piece = self.p_moved.type.upper()
+    
+        return f"{piece}{self.end.algebraic()[i]}"
+    
+    def play(self, board, move_list:MoveList):
+        """docstring"""
+        move_list.append(self)
+        board[self.end.coords[1]][self.end.coords[0]] = self.p_moved
+        board[self.start.coords[1]][self.start.coords[0]] = None        
     
 class MoveList:
     """A container for lists of moves"""
@@ -70,9 +74,18 @@ class MoveList:
     def append(self,move:Move):
         self.moves.append(move)
 
-def make_move(move:Move, board, move_list:MoveList):
-    """docstring"""
-    move_list.append(move)
-    logging.debug(f"start:{move.start}, end:{move.end}, piece:{move.p_moved}")
-    board[move.end[1]][move.end[0]] = move.p_moved
-    board[move.start[1]][move.start[0]] = None
+    def pgn(self):
+        """A function that returns the pgn notation of the moves"""
+        pieces_pgn = []
+        for move in self.moves:
+            if move.p_moved is None:
+                pieces_pgn.append("")
+            elif move.p_moved.type == "p":
+                pieces_pgn.append("")
+            else: pieces_pgn.append((move.p_moved.type).upper())
+        
+        output = []
+        for i in range(len(pieces_pgn)):
+            output.append(f"{pieces_pgn[i]}{self.moves[i].end.algebraic()}")
+        
+        return output

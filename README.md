@@ -5,7 +5,7 @@ Chess game in python using pygame
 - [ ] en passant
 - [ ] castling
 - [ ] pins 
-- [ ] keeping track of moves played (useful for en passant)
+- [x] keeping track of moves played (useful for en passant)
 - [ ] moving more of the game logic out of chess.py
 - [ ] fixing legal move highlights for captures
 - [ ] reworking how the board is stored (single list of length 64?)
