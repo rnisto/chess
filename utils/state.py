@@ -1,5 +1,6 @@
 """docstring"""
 import utils.moves
+import pygame
 
 class GameState:
     """A class for holding game state variables"""
@@ -24,3 +25,12 @@ class GameState:
     def reset_selection():
         self.start_square = None
         self.legal_moves = None
+
+class Style:
+    """A class for holding style variables"""
+    def __init__(self):
+        self.dark_col:str = "#769656"
+        self.light_col:str = "#eeeed2"
+        self.highlight_col:str = "#baca44"
+        self.shade_col:str = "#eaf59a"
+        self.font = pygame.font.SysFont('monospace', 100)
