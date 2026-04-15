@@ -72,6 +72,7 @@ class MoveList:
         self.moves = []
 
     def append(self,move:Move):
+        """A function append moves to the movelist"""
         self.moves.append(move)
 
     def pgn(self):

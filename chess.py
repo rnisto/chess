@@ -9,6 +9,7 @@ import utils.fen
 import utils.coordinates
 import utils.render
 import utils.moves
+import utils.state
 
 # Setup the log file. 
 start_time = datetime.datetime.now()
@@ -36,13 +37,8 @@ shade_col = "#eaf59a"
 my_font = pygame.font.SysFont('monospace', 100)
 
 # Definie initial params.
-start_square = None
-previous_pos = None
-clicked = None
-new_pos = None
-legal_moves = None
-turn_colour = "w"
 move_list = utils.moves.MoveList()
+state = utils.state.GameState(move_list)
 
 # Setting up the board.
 starting_position_fen = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR"
@@ -72,24 +68,24 @@ while running:
         # Checking whether the user clicked on a square and moving pieces.
         elif event.type == pygame.MOUSEBUTTONDOWN:
             mouse_pos = pygame.mouse.get_pos()
-            clicked = utils.moves.Square(
+            state.clicked = utils.moves.Square(
                 coords = utils.coordinates.PixelToGrid(mouse_pos,SQUARE_SIZE)
             )
-            logging.debug(clicked.algebraic())
+            logging.debug(state.clicked.algebraic())
 
-            if clicked is None:
+            if state.clicked is None:
                 continue
 
             # If user clicked on a square, check if it has a piece and 
             # if so select it. This only runs if selected pieces is none
             # (i.e) the user still hasn't clicked on a piece.
-            if start_square is None:
+            if state.start_square is None:
                 logging.debug("user selecting a piece")
-                if clicked.find_piece(board) is None:
+                if state.clicked.find_piece(board) is None:
                     continue  # click empty square → ignore
-                elif clicked.find_piece(board).colour == turn_colour:
-                    start_square = clicked
-                    legal_moves = start_square.find_piece(board).get_legal_moves(board,start_square.coords)
+                elif state.clicked.find_piece(board).colour == state.turn_colour:
+                    state.start_square = state.clicked
+                    state.legal_moves = state.start_square.find_piece(board).get_legal_moves(board,state.start_square.coords)
                 continue
 
             # If the user has selected a piece, then this click is to 
@@ -98,31 +94,24 @@ while running:
             else:
                 logging.debug("user selecting a move")                 
                 # Ignore clicking same square.
-                if clicked == start_square:
+                if state.clicked == state.start_square:
                     logging.debug("user selected start square. resetting move")
-                    start_square = None
+                    state.start_square = None
                     continue
 
-                if clicked.coords in legal_moves:
+                if state.clicked.coords in state.legal_moves:
                     logging.debug("Selected a legal move")
-                    selected_move = utils.moves.Move(
-                        start = start_square,
-                        end = clicked,
-                        p_moved = start_square.find_piece(board),
-                        p_taken = clicked.find_piece(board)
+                    state.selected_move = utils.moves.Move(
+                        start = state.start_square,
+                        end = state.clicked,
+                        p_moved = state.start_square.find_piece(board),
+                        p_taken = state.clicked.find_piece(board)
                         )
-                    selected_move.play(board, move_list)
-                    
-                    previous_pos = start_square
-                    new_pos = clicked
-                    start_square = None
-                    legal_moves = None
-                    
-                    turn_colour = "b" if turn_colour == "w" else "w"
+                    state.selected_move.play(board, state.move_list)
+                    state.new_turn(previous_pos=state.start_square, new_pos= state.clicked)
                 else:
                     logging.debug("user selected an illegal move, starting over.")
-                    start_square = None
-                    legal_moves = None
+                    state.reset_selection()
     
 
     # Fill the screen with a color to wipe away anything from last frame.
@@ -139,14 +128,14 @@ while running:
             pygame.draw.rect(screen, colour, rect)
 
     # Render square highlights.
-    if previous_pos:
-        utils.render.RenderSquare(previous_pos, SQUARE_SIZE, shade_col, screen)  
-    if new_pos:
-        utils.render.RenderSquare(new_pos, SQUARE_SIZE, highlight_col, screen)   
-    if clicked:
-        utils.render.RenderSquare(clicked, SQUARE_SIZE, highlight_col, screen)
-    if legal_moves:
-        for row, col in legal_moves:
+    if state.previous_pos:
+        utils.render.RenderSquare(state.previous_pos, SQUARE_SIZE, shade_col, screen)  
+    if state.new_pos:
+        utils.render.RenderSquare(state.new_pos, SQUARE_SIZE, highlight_col, screen)   
+    if state.clicked:
+        utils.render.RenderSquare(state.clicked, SQUARE_SIZE, highlight_col, screen)
+    if state.legal_moves:
+        for row, col in state.legal_moves:
             x, y = utils.coordinates.GridToPixel(row,col,SQUARE_SIZE)
             pygame.draw.circle(screen, highlight_col, (x, y), SQUARE_SIZE / 10)    
 
